@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Новая заметка{% endblock %}
+
+{% block content %}
+    <h1>Создание новой заметки</h1>
+    <p>Заполните следующие поля для создания заметки</p>
+    <form action="." method="post">
+        {{ note_form }}
+        {% csrf_token %}
+        <p><input type="submit" value="Добавить заметку"></p>
+    </form>
+{% endblock %}

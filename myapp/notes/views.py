@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, NoteForm
+from .models import Notes
 
 
 
@@ -70,3 +72,34 @@ def user_register(request:HttpRequest):
         user_form = RegisterForm()
 
     return render(request, 'notes/register.html', {'user_form': user_form})
+
+
+
+@login_required
+def notes(request:HttpRequest):
+    '''
+    Страница пользователя с заметками
+    '''
+
+    user_notes = Notes.objects.filter(author=request.user.id).all()
+
+    return render(request, "notes/notes.html", {"notes": user_notes})
+
+
+
+@login_required
+def new_note(request:HttpRequest):
+    '''
+    Страница для создания новой заметки
+    '''
+    if request.method == 'POST':
+        note = Notes()
+        note.name = request.POST.get("name")
+        note.text = request.POST.get("text")
+        note.author = request.user
+        note.save()
+
+        return redirect("notes")
+
+    else:
+        return render(request, "notes/new_note.html", {"note_form": NoteForm()})

@@ -4,16 +4,18 @@ from django.contrib.auth.models import User
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField()
+    username = forms.CharField(label="Логин", min_length=6, max_length=20)
+    password = forms.CharField(label="Пароль", max_length=20)
 
 
 
 class RegisterForm(forms.ModelForm):
+    '''
+    Форма для регистрации
+    '''
 
-
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
 
 
     class Meta:
@@ -22,8 +24,19 @@ class RegisterForm(forms.ModelForm):
 
 
     def clean_password2(self) -> str:
-
+        '''
+        Сравнение дубликата пароля на совпадение
+        '''
         cd = self.cleaned_data
         if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match.')
+            raise forms.ValidationError('Пароли не совпадают.')
         return cd['password2']
+
+
+
+class NoteForm(forms.Form):
+    '''
+    Форма для новой заметки
+    '''
+    name = forms.CharField(label="Название заметки", min_length=2, max_length=20)
+    text = forms.CharField(label="Содержимое заметки", widget=forms.Textarea)

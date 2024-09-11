@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Ваши заметки{% endblock %}
+
+{% block content %}
+    <h1>Привет, {{ user.first_name }}!</h1>
+    
+    <a href="{% url 'new_note' %}">Создать заметку</a>
+    <a href="{% url 'logout' %}">Выйти</a>
+    
+    <h2>Ваши заметки</h2>
+    {% for note in notes %}
+    
+    <li>
+        <h4>{{ note.name }}</h4>
+        <p>{{ note.text }}</p>
+    </li>
+    
+    {% empty %}
+    <li>У Вас пока что нет заметок</li>
+    
+    {% endfor %}
+
+
+{% endblock %}

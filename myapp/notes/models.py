@@ -13,8 +13,8 @@ class Notes(models.Model):
     # Содержание заметки
     text = models.TextField()
     # Дата создания
-    create = models.DateTimeField()
+    create = models.DateTimeField(auto_now_add=True)
     # Дата обновления
-    update = models.DateTimeField()
+    update = models.DateTimeField(auto_now=True)
     # автор заметок
     author = models.ForeignKey(User, on_delete=models.CASCADE)
