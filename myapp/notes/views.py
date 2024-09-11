@@ -1,8 +1,17 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
-from django.contrib.auth import aauthenticate, login, logout
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 from .forms import RegisterForm, LoginForm
+
+
+
+def home(request:HttpRequest):
+    '''
+    Начальная страница
+    '''
+    return render(request, "notes/index.html")
 
 
 
@@ -13,7 +22,7 @@ def user_login(request:HttpRequest):
 
     if request.method == "POST":
 
-        user = aauthenticate(request=request, 
+        user = authenticate(request=request, 
                              username=request.POST["username"], 
                              password=request.POST["password"])
            
@@ -24,7 +33,7 @@ def user_login(request:HttpRequest):
             return redirect("notes")
     
     else:
-        return render(request, "login.html", {"form": LoginForm()})
+        return render(request, "notes/login.html", {"form": LoginForm()})
 
 
 
@@ -36,7 +45,7 @@ def user_logout(request:HttpRequest):
     '''
     logout(request)
 
-    return render(request, "index.html")
+    return render(request, "notes/index.html")
 
 
 
@@ -45,12 +54,19 @@ def user_register(request:HttpRequest):
     Регистрация пользователя
     '''
 
-    if request.method == "POST":
-        # Производим манипуляции с данными
+    if request.method == 'POST':
+        user_form = RegisterForm(request.POST)
 
-        # В случае удачи переадресуем на страницу авторизации
-        if True:
-            return redirect("login")
-    
+        if user_form.is_valid():
+            # Создайте новый объект пользователя, но пока не сохраняйте его.
+            new_user: User = user_form.save(commit=False)
+            # Установите выбранный пароль
+            new_user.set_password(user_form.cleaned_data['password'])
+            # Сохраните объект пользователя.
+            new_user.save()
+
+            return render(request, 'notes/register_done.html')
     else:
-        return render(request, "register.html", {"form": RegisterForm()})
+        user_form = RegisterForm()
+
+    return render(request, 'notes/register.html', {'user_form': user_form})
