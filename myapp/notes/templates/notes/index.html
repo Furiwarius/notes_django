@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+
+{% block title %}Заметки{% endblock %}
+
+{% block content %}
+
+    <h1>Добро пожаловать в заметки</h1>
+    <p>Зарегистрируйтесь или войдите, чтобы начать работать</p>
+    
+    <a href="{% url 'login' %}">Войти</a>
+    <a href="{% url 'register' %}">Зарегистрироваться</a>
+
+{% endblock %}

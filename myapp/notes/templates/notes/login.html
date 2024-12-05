@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Войдите в заметки{% endblock %}
+
+{% block content %}
+    <h1>Авторизация</h1>
+    <p>Введите имя пользователя и пароль</p>
+    
+    <form method="post">
+        {{ form}}
+        {% csrf_token %}
+        <p><input type="submit" value="Войти"></p>
+    </form>
+{% endblock %}
